@@ -18,9 +18,27 @@
 #include "logging.h"
 #include "eventbase.h"
 #include <thread>
-
+#include "tcpServer.h"
+//sudo tcpdump  -i lo -s0 -n -t 'src host 127.0.0.1' and 'tcp port 2099' -X -nn
+//nc [IP|host] [port]
+//nc -l -p [port]
 using namespace txh;
 using namespace std;
+
+TEST(TestTcpServer)
+{
+  EventBase base;
+  Signal::signal(SIGINT,[&]{ base.exit(); });
+
+  TcpServerPtr svr = TcpServer::startServer(&base,"",2099);
+  exitif(svr == NULL, "start tcp server failed");
+
+  svr->onConnRead([](const TcpConnPtr& con) {
+    con->send(con->getInput());
+  });
+
+  base.loop();
+}
 
 TEST(TestEventbase)
 {

@@ -67,7 +67,7 @@ void PollerEpoll::loop_once(int waitMs)
 	{
 		int i = m_lastActive;
 		Channel *ch = (Channel *)m_activeEvents[i].data.ptr;
-		int events = ch->events();
+		int events = m_activeEvents[i].events;
 		if(ch){
 			if(events & (EPOLLERR | ReadEvent )){
 				trace("channel %lld fd %d handle read",(long long)ch->id(),ch->fd());

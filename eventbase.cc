@@ -16,7 +16,7 @@ EventBase::EventBase(int taskCapacity)
 	r = util::addFdFlag(m_wakeupfd[1],O_CLOEXEC);
 	fatalif(r < 0, "addFdFlag fail %d %s",errno,strerror(errno));
 
-	info("wakeup pipe created %d %d",m_wakeupfd[0],m_wakeupfd[1]);
+	info("wakeup pipe created fd: %d %d",m_wakeupfd[0],m_wakeupfd[1]);
 	Channel *ch = new Channel(this,m_wakeupfd[0],ReadEvent);
 	ch->onRead([=]{
 		char buf[1024];
@@ -39,7 +39,9 @@ EventBase::EventBase(int taskCapacity)
 EventBase::~EventBase()
 {
 	delete m_poller;
+	info("delete pipe: %d",m_wakeupfd[1]);
 	::close(m_wakeupfd[1]);
+	info("eventbase end");
 }
 
 void EventBase::handleTimeout()

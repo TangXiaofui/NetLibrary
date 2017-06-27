@@ -82,9 +82,20 @@ void TcpServer::handleAccept()
       fatalif(r, "addFdFlag FD_CLOEXEC failed");
 
       //client
+      TcpConnPtr con = TcpConnPtr(new TcpConn);
+      auto addcon = [=] {
+	  con->attach(base_, clifd, local, peer);
 
-      if (listenfd >= 0 && errno != EAGAIN && errno != EINTR) {
-          warn("accept return %d  %d %s", clifd, errno, strerror(errno));
+	  if(readcb_)
+	    con->onRead(readcb_);
+
+      };
+
+      base_->safeCall(move(addcon));
+
+
+      if (listenfd >= 0) {
+          info("accept return %d ", clifd);
       }
   }
 }

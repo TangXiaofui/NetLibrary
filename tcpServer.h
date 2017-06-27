@@ -15,6 +15,7 @@
 #include "net.h"
 #include "channel.h"
 #include "logging.h"
+#include "tcpConn.h"
 
 namespace txh{
 
@@ -30,14 +31,17 @@ struct TcpServer:public noncopyable{
   int bind(const string &addr,short port,bool reusePort);
 
 
-  static TcpServerPtr startServer(EventBase *base, const string& addr,short port,bool reusePort);
+  static TcpServerPtr startServer(EventBase *base, const string& addr,short port,bool reusePort = false);
   Ip4Addr getAddr();
+
+  void onConnRead(const TcpCallback& cb) { readcb_ = cb; }
 
 
 private:
   EventBase *base_;
   Ip4Addr serverAddr_;
   Channel *listenChannel_;
+  TcpCallback readcb_;
 
   void handleAccept();
 };
