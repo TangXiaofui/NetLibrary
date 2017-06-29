@@ -146,9 +146,9 @@ void TcpConn::cleanup(const TcpConnPtr& con)
         local_.toString().c_str(),peer_.toString().c_str(),channel_->fd());
 
    readcb_ = writecb_ = statecb_ = nullptr;
-   Channel* ch = channel_;
-   channel_ = nullptr;
-   delete ch;
+//   Channel* ch = channel_;
+//   channel_ = nullptr;
+//   delete ch;
 }
 
 int TcpConn::readImp(int fd, void* buf, size_t bytes)

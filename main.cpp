@@ -22,6 +22,7 @@
 //sudo tcpdump  -i lo -s0 -n -t 'src host 127.0.0.1' and 'tcp port 2099' -X -nn
 //nc [IP|host] [port]
 //nc -l -p [port]
+//valgrind --tool=memcheck --leak-check=full ./
 using namespace txh;
 using namespace std;
 
